@@ -5,5 +5,10 @@ module.exports = defineConfig({
   devServer:{
     open:true,
     host:'localhost',
+    proxy:{
+      "/api":{
+        target:'http://gmall-h5-api.atguigu.cn',
+      }
+    }
   },
 })
