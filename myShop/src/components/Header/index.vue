@@ -49,7 +49,15 @@ export default {
   },
   methods:{
     goSearch(){
-        this.$router.push({name:'search',query:{searchContent:this.searchContent}})
+        let location={name:'search'}
+        let params={
+            searchContent:this.searchContent || undefined
+        }
+        location.params=params
+        if(this.$route.query){
+            location.query=this.$route.query
+        }
+        this.$router.push(location)
     }
   }
 }

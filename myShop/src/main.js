@@ -2,11 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import TypeNav from '@/components/TypeNav'
-import { reqCategoryList } from '@/api'
+import store from './store'
+import '@/mock/mockServe'
+import 'swiper/css/swiper.css'
 Vue.component('TypeNav',TypeNav)
 Vue.config.productionTip = false
-
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store,
 }).$mount('#app')

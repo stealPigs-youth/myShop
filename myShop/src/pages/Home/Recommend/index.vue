@@ -22,7 +22,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+    </div>
 
 </template>
 
@@ -37,6 +37,7 @@ export default {
 
 <style lang='less' scoped>
      .today-recommend {
+        margin-top: 50px;
         .py-container {
             width: 1200px;
             margin: 0 auto;
