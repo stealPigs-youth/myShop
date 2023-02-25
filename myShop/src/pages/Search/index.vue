@@ -1,8 +1,9 @@
 <template>
   <div>
     <TypeNav></TypeNav>
-    <p>query{{this.$route.query}}</p>
-    <p>params{{this.$route.params}}</p> 
+    <p>query:{{searchData.categoryName}}</p>
+    <p>params:{{searchData.keywords}}</p> 
+    <p>trademark:{{searchData.trademark}}</p> 
     <div class="main">
       <div class="py-container">
         <!--bread-->
@@ -13,15 +14,14 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone</li>
-            <li class="with-x">华为</li>
-            <li class="with-x">OPPO</li>
+            <li class="with-x" v-if="searchData.categoryName" v-on:click="removeCategoryName">{{searchData.categoryName}}<i>-</i></li>
+            <li class="with-x" v-if="searchData.keywords" v-on:click="removeKeyWords">{{searchData.keywords}}<i>-</i></li>
+            <li class="with-x" v-if="searchData.trademark" v-on:click="removeTradeMark">{{searchData.trademark.split(':')[1]}}<i>-</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector v-on:tradeMarkInfo="tradeMarkInfo"/>
 
         <!--details-->
         <div class="details clearfix">
@@ -121,11 +121,72 @@ import { mapGetters } from 'vuex'
     components: {
       SearchSelector
     },
+    data(){
+      return {
+        searchData:{
+          "category1Id": "",
+          "category2Id": "",
+          "category3Id": "",
+          "categoryName": "",
+          "keywords": "",
+          "order": "",
+          "pageNo": 1,
+          "pageSize": 10,
+          "props": [],
+          "trademark": ""
+        }
+      }
+    },
     computed:{
       ...mapGetters(['goodsList'])
     },
+    methods:{
+      getData(){
+        this.$store.dispatch('getSearchList',this.searchData)
+      },
+      tradeMarkInfo(trademark){
+        this.searchData.trademark=`${trademark.tmId}:${trademark.tmName}`
+        this.getData()
+      },
+      removeTradeMark(){
+        this.searchData.trademark=undefined
+        this.getData()
+      },
+      removeCategoryName(){
+        this.searchData.category1Id=undefined
+        this.searchData.category2Id=undefined
+        this.searchData.category3Id=undefined
+        this.searchData.categoryName=undefined
+        let location={name:'search'}
+        if(this.$route.params){
+          location.params=this.$route.params
+        }
+        this.$router.push(location)
+      },
+      removeKeyWords(){
+        this.searchData.keywords=undefined
+        this.$bus.$emit('clear')
+        let location={name:'search'}
+        if(this.$route.query){
+          location.query=this.$route.query
+        }
+        this.$router.push(location)
+      }
+    },
+    watch:{
+      $route(newVal,oldVal){
+        this.searchData.category1Id=undefined
+        this.searchData.category2Id=undefined
+        this.searchData.category3Id=undefined
+        Object.assign(this.searchData,newVal.query,newVal.params)
+        this.getData()
+      }
+    },
+    beforeMount(){
+      Object.assign(this.searchData,this.$route.query,this.$route.params)
+    },
     mounted(){
-      this.$store.dispatch('getSearchList')
+      this.getData()
     }
   }
 </script>

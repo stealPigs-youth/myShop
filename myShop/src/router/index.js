@@ -35,7 +35,7 @@ export default new VueRouter({
             component:()=>import('@/pages/Register'),
         },
         {
-            path:"/search/:searchContent",
+            path:"/search/:keywords",
             name:'search',
             component:()=>import('@/pages/Search'),
             meta:{showFooter:true}
