@@ -41,9 +41,16 @@ export default new VueRouter({
             meta:{showFooter:true}
         },
         {
+            path:'/detail/:goodId',
+            component:()=>import('@/pages/Detail')
+        },
+        {
             path:'*',
             redirect:"/home"
         }
     ],
-    mode:"history"
+    scrollBehavior(to,from,savePosition){
+        return {y:0}
+    },
+    mode:"history",
 })

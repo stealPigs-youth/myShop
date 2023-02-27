@@ -25,3 +25,9 @@ export const reqGetSearchInfo=(data)=>{
         data:data
     })
 }
+export const reqGoodsInfo=(goodId)=>{
+    return requests({
+        url:`/item/${goodId}`,
+        method:'get'
+    })
+}

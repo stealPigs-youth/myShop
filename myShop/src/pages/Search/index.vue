@@ -1,9 +1,6 @@
 <template>
   <div>
     <TypeNav></TypeNav>
-    <p>query:{{searchData.categoryName}}</p>
-    <p>params:{{searchData.keywords}}</p> 
-    <p>trademark:{{searchData.trademark}}</p> 
     <div class="main">
       <div class="py-container">
         <!--bread-->
@@ -17,34 +14,23 @@
             <li class="with-x" v-if="searchData.categoryName" v-on:click="removeCategoryName">{{searchData.categoryName}}<i>-</i></li>
             <li class="with-x" v-if="searchData.keywords" v-on:click="removeKeyWords">{{searchData.keywords}}<i>-</i></li>
             <li class="with-x" v-if="searchData.trademark" v-on:click="removeTradeMark">{{searchData.trademark.split(':')[1]}}<i>-</i></li>
+           <li class="with-x" v-for="(prop,index) in searchData.props" v-on:click="removeProp(index)">{{prop.split(':')[1]}}<i>-</i></li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector v-on:tradeMarkInfo="tradeMarkInfo"/>
+        <SearchSelector v-on:tradeMarkInfo="tradeMarkInfo" v-on:attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:searchData.order.indexOf('1')==0}" v-on:click="changeSort('1')">
+                  <a>综合<font-awesome-icon icon="fa-arrow-up" v-show="searchData.order==='1:asc'" /><font-awesome-icon icon="fa-arrow-down" v-show="searchData.order==='1:desc'"/></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:searchData.order.indexOf('2')==0}" v-on:click="changeSort('2')">
+                  <a>价格<font-awesome-icon icon="fa-arrow-up" v-show="searchData.order==='2:asc'" /><font-awesome-icon icon="fa-arrow-down" v-show="searchData.order==='2:desc'"/></a>
                 </li>
               </ul>
             </div>
@@ -54,9 +40,9 @@
               <li class="yui3-u-1-5" v-for="(goods,index) in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank">
+                    <router-link :to="`/detail/${goods.id}`">
                       <img :src="goods.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -78,35 +64,7 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pager :total="301" :pageSize="searchData.pageSize" v-on:getPagerData="getPagerData"></Pager>
         </div>
       </div>
     </div>
@@ -129,23 +87,48 @@ import { mapGetters } from 'vuex'
           "category3Id": "",
           "categoryName": "",
           "keywords": "",
-          "order": "",
-          "pageNo": 1,
-          "pageSize": 10,
+          "order": "1:desc",
+          "pageNo": 3,
+          "pageSize": 5,
           "props": [],
           "trademark": ""
-        }
+        },
       }
     },
     computed:{
       ...mapGetters(['goodsList'])
     },
     methods:{
+      getPagerData(pageNo){
+        this.searchData.pageNo=pageNo
+        this.getData()
+      },
+      changeSort(pos){
+        let orderStr=pos+':desc'
+        if(this.searchData.order!=orderStr){
+          this.searchData.order=orderStr
+        }
+        else{
+          this.searchData.order=pos+':asc'
+        }
+        this.getData()
+      },
+      attrInfo(attr,attrValue){
+        let propStr=`${attr.attrId}:${attrValue}:${attr.attrName}`
+        if(this.searchData.props.indexOf(propStr)==-1){
+          this.searchData.props.push(propStr)
+          this.getData()
+        }
+      },
       getData(){
         this.$store.dispatch('getSearchList',this.searchData)
       },
       tradeMarkInfo(trademark){
         this.searchData.trademark=`${trademark.tmId}:${trademark.tmName}`
+        this.getData()
+      },
+      removeProp(index){
+        this.searchData.props.splice(index,1)
         this.getData()
       },
       removeTradeMark(){
@@ -157,20 +140,12 @@ import { mapGetters } from 'vuex'
         this.searchData.category2Id=undefined
         this.searchData.category3Id=undefined
         this.searchData.categoryName=undefined
-        let location={name:'search'}
-        if(this.$route.params){
-          location.params=this.$route.params
-        }
-        this.$router.push(location)
+        this.getData()
       },
       removeKeyWords(){
         this.searchData.keywords=undefined
         this.$bus.$emit('clear')
-        let location={name:'search'}
-        if(this.$route.query){
-          location.query=this.$route.query
-        }
-        this.$router.push(location)
+        this.getData()
       }
     },
     watch:{
@@ -430,93 +405,6 @@ import { mapGetters } from 'vuex'
                   }
                 }
               }
-            }
-          }
-        }
-
-        .page {
-          width: 733px;
-          height: 66px;
-          overflow: hidden;
-          float: right;
-
-          .sui-pagination {
-            margin: 18px 0;
-
-            ul {
-              margin-left: 0;
-              margin-bottom: 0;
-              vertical-align: middle;
-              width: 490px;
-              float: left;
-
-              li {
-                line-height: 18px;
-                display: inline-block;
-
-                a {
-                  position: relative;
-                  float: left;
-                  line-height: 18px;
-                  text-decoration: none;
-                  background-color: #fff;
-                  border: 1px solid #e0e9ee;
-                  margin-left: -1px;
-                  font-size: 14px;
-                  padding: 9px 18px;
-                  color: #333;
-                }
-
-                &.active {
-                  a {
-                    background-color: #fff;
-                    color: #e1251b;
-                    border-color: #fff;
-                    cursor: default;
-                  }
-                }
-
-                &.prev {
-                  a {
-                    background-color: #fafafa;
-                  }
-                }
-
-                &.disabled {
-                  a {
-                    color: #999;
-                    cursor: default;
-                  }
-                }
-
-                &.dotted {
-                  span {
-                    margin-left: -1px;
-                    position: relative;
-                    float: left;
-                    line-height: 18px;
-                    text-decoration: none;
-                    background-color: #fff;
-                    font-size: 14px;
-                    border: 0;
-                    padding: 9px 18px;
-                    color: #333;
-                  }
-                }
-
-                &.next {
-                  a {
-                    background-color: #fafafa;
-                  }
-                }
-              }
-            }
-
-            div {
-              color: #333;
-              font-size: 14px;
-              float: right;
-              width: 241px;
             }
           }
         }
