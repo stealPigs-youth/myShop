@@ -1,9 +1,9 @@
 <template>
   <div class="spec-preview">
-    <img :src="imgUrl" />
+    <img :src="skuImageListItem.imgUrl" />
     <div class="event"></div>
     <div class="big">
-      <img :src="imgUrl" />
+      <img :src="skuImageListItem.imgUrl" />
     </div>
     <div class="mask"></div>
   </div>
@@ -12,11 +12,24 @@
 <script>
   export default {
     name: "Zoom",
+    data(){
+      return {
+        index:0
+      }
+    },
     props:['skuImageList'],
     computed:{
-      imgUrl(){
-        return this.skuImageList[0].imgUrl||{}
+      skuImageListItem(){
+        return this.skuImageList[this.index]||{}
       }
+    },
+    methods:{
+      getIndex(index){
+        this.index=index
+      }
+    },
+    mounted(){
+      this.$bus.$on('getIndex',this.getIndex)
     }
   }
 </script>

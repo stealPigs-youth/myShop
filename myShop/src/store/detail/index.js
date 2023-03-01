@@ -21,6 +21,9 @@ let getters={
     },
     skuInfo(state){
         return state.goodInfo.skuInfo||{}
+    },
+    spuSaleAttrList(state){
+        return state.goodInfo.spuSaleAttrList||[]
     }
 }
 export default {
