@@ -31,3 +31,10 @@ export const reqGoodsInfo=(goodId)=>{
         method:'get'
     })
 }
+export const reqAddOrUpdateShopCart=(skuId,skuNum)=>{
+    return requests({
+        url:`/cart/addToCart/${skuId}/${skuNum}`,
+        method:'post'
+    })
+   
+}

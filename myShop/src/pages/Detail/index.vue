@@ -76,12 +76,12 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="itemNum" v-on:blur="inputBlur">
+                <a href="javascript:" class="plus" v-on:click="itemNum++">+</a>
+                <a href="javascript:" class="mins" v-on:click="itemNum>=2?itemNum--:itemNum=1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" v-on:click="addShopCar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -341,6 +341,11 @@
       ImageList,
       Zoom
     },
+    data(){
+      return {
+        itemNum:1
+      }
+    },
     computed:{
       ...mapGetters(['categoryView','skuInfo','spuSaleAttrList']),
       skuImageList(){
@@ -348,11 +353,30 @@
       }
     },
     methods:{
+      inputBlur(e){
+        let value=e.target.value*1
+        if(isNaN(value)||value<1){
+          this.itemNum=1
+        }
+        else{
+          this.itemNum=parseInt(value)
+        }
+      },
       changeChecked(attrValueList,attrValue){
         attrValueList.forEach(attrValueItem=>{
           attrValueItem.isChecked="0"
         })
         attrValue.isChecked="1"
+      },
+      async addShopCar(){
+        let result=await this.$store.dispatch('addOrUpdateShopCart',{skuId:this.skuInfo.id,skuNum:this.itemNum})
+        if(result==='成功'){
+          this.$router.push('/addcartsuccess')
+          localStorage.setItem('skuInfo',JSON.stringify(this.skuInfo))
+          localStorage.setItem('itemNum',this.itemNum)
+        }else{
+          alert('添加失败')
+        }
       }
     },
     mounted(){

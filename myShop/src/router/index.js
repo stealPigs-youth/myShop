@@ -45,6 +45,11 @@ export default new VueRouter({
             component:()=>import('@/pages/Detail')
         },
         {
+            path:'/addcartsuccess',
+            component:()=>import('@/pages/AddCartSuccess'),
+            meta:{showFooter:true}
+        },
+        {
             path:'*',
             redirect:"/home"
         }
