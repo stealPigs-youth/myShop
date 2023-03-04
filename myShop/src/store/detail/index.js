@@ -1,4 +1,5 @@
 import { reqGoodsInfo,reqAddOrUpdateShopCart } from "@/api"
+import {getNanoid} from '@/utils/nanoid'
 let actions={
     async getGoodInfo({commit},goodId){
         let result= await reqGoodsInfo(goodId)
@@ -23,7 +24,8 @@ let mutations={
     }
 }
 let state={
-    goodInfo:{}
+    goodInfo:{},
+    NANOID:getNanoid()
 }
 let getters={
     categoryView(state){

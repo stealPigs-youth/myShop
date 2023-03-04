@@ -50,6 +50,10 @@ export default new VueRouter({
             meta:{showFooter:true}
         },
         {
+            path:'/shopcart',
+            component:()=>import('@/pages/ShopCart')
+        },
+        {
             path:'*',
             redirect:"/home"
         }
