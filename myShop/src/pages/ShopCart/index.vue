@@ -26,9 +26,8 @@
           </li>
             
           <li class="cart-list-con5">
-            <input type="checkbox" v-model="cartInfo.isChecked">
-            <a href="#none" >删除</a>
-            <a href="#none">移到收藏</a>
+            <input type="checkbox"  :checked="cartInfo.isChecked" v-on:click="changeState(cartInfo,$event)">
+            <span v-on:click="deleteCartById(cartInfoList,cartInfo)">删除</span>
           </li>
         </ul>
       </div>
@@ -36,11 +35,10 @@
     <div class="cart-tool">
 
       <div class="select-all">
-        <a v-on:click="chooseAll">全选</a>
+        <span v-on:click="chooseAll">全选</span>
       </div>
       <div class="option">
-        <a href="#">删除选中的商品</a>
-        <a href="#">选中商品移到我的收藏</a>
+        <span v-on:click="deleteChoseItem" >删除选中的商品</span>
       </div>
       <div class="money-box">
         <div >已选择{{checkedNum}}件商品</div>
@@ -75,10 +73,36 @@
       }
     },
     methods:{
+      changeState(cartInfo,e){
+        if(e.target.checked===true){
+          cartInfo.isChecked=1
+        }
+        else{
+          cartInfo.isChecked=0
+        }
+      },
+      deleteChoseItem(){
+        console.log(this.cartInfoList[0])
+        for(let i=this.cartInfoList.length-1;i>=0;i--){
+          if(this.cartInfoList[i].isChecked===1){
+            this.$store.dispatch('deleteCartListBySkuId',this.cartInfoList[i].skuId)
+            this.cartInfoList.splice(i,1)
+          }
+        }
+      },
+      async deleteCartById(cartInfoList,cartInfo){
+        let result=await this.$store.dispatch('deleteCartListBySkuId',cartInfo.skuId)
+        if(result==='success'){
+          cartInfoList.forEach((item,index)=>{
+            if(item.skuId===cartInfo.skuId){
+              cartInfoList.splice(index,1)
+            }
+          })
+        }
+      },
       chooseAll(){
-        this.cartInfoList.map((cartInfo)=>{
-          cartInfo.isChecked=true
-          return cartInfo
+        this.cartInfoList.forEach((cartInfo)=>{
+          cartInfo.isChecked=1
         })
       },
       changeShopNum(cartInfo,e){
@@ -159,12 +183,15 @@
             display: flex;
             justify-content: center;
             flex: 2;
-            a{
+            span{
               margin-left: 5px;
               border: 2px solid #045FD1 ;
               background-color: #045FD1;
               color: white;
               border-radius: 10%;
+              &:hover{
+                background-color: #EA4A36;
+              }
             }
           }
         }
@@ -181,23 +208,30 @@
       .select-all{
         display: flex;
         margin-right: 30px;
-        a{
+        span{
           margin-left: 5px;
           border: #045FD1 2px solid;
           border-radius: 10%;
           background-color: #045FD1;
           color: white;
+          &:hover{
+            background-color: #EA4A36;
+          }
         }
       }
       .option{
         margin-right: 30px;
-        a{
+        span{
           border: #045FD1 solid 2px;
           margin-right: 10px;
           background-color: #045FD1;
           color: white;
           border-radius: 10%;
+          &:hover{
+            background-color: #EA4A36;
+          }
         }
+       
       }
       .money-box{
         display: flex;

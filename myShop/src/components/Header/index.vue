@@ -6,7 +6,6 @@
                     <div class="loginList">
                         <p>尚品汇欢迎您！</p>
                         <p>
-                            <span>请</span>
                             <router-link to="/login">登录</router-link>
                             <router-link to="/register" class="register">免费注册</router-link>
                         </p>
@@ -14,7 +13,7 @@
                     <div class="typeList">
                         <a href="###">我的订单</a>
                         <router-link to="/shopcart">我的购物车</router-link>
-                        <a href="###">我的尚品汇</a>
+                        <router-link to="/home">我的尚品汇</router-link>
                         <a href="###">尚品汇会员</a>
                         <a href="###">企业采购</a>
                         <a href="###">关注尚品汇</a>

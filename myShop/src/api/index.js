@@ -43,3 +43,29 @@ export const reqCartList=()=>{
         method:'get'
     })
 }
+export const reqDeleteCardById=(skuId)=>{
+    return requests({
+        url:`/cart/deleteCart/${skuId}`,
+        method:'delete'
+    })
+}
+export const reqGetCode=(phone)=>{
+    return requests({
+        url:`/user/passport/sendCode/${phone}`,
+        method:'get'
+    })
+}
+export const reqUserRegister=(userData)=>{
+    return requests({
+        url:'/user/passport/register',
+        data:userData,
+        method:'post'
+    })
+}
+export const reqUserLogin=(userData)=>{
+    return requests({
+        url:'/user/passport/login',
+        data:userData,
+        method:'post'
+    })
+}

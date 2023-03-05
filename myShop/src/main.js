@@ -6,7 +6,7 @@ import Pager from './components/Pager'
 import store from './store'
 import '@/mock/mockServe'
 import 'swiper/css/swiper.css'
-import './assets/fontIcon'
+import './utils/fontIcon.js'
 
 Vue.component('TypeNav',TypeNav)
 Vue.component('Pager',Pager)
