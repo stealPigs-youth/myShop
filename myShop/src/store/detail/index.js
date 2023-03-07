@@ -1,5 +1,4 @@
 import { reqGoodsInfo,reqAddOrUpdateShopCart } from "@/api"
-import {getNanoid} from '@/utils/nanoid'
 let actions={
     async getGoodInfo({commit},goodId){
         let result= await reqGoodsInfo(goodId)
@@ -8,12 +7,16 @@ let actions={
         }
     },
     async addOrUpdateShopCart({commit},{skuId,skuNum}){
-        let result=await reqAddOrUpdateShopCart(skuId,skuNum)
-        if(result.code==200){
-            return '成功'
-        }
-        else{
-            return '失败'
+        if(localStorage.getItem('TOKEN')){
+            let result=await reqAddOrUpdateShopCart(skuId,skuNum)
+            if(result.code==200){
+                return '成功'
+            }
+            else{
+                return '失败'
+            }
+        }else{
+            return '未登录'
         }
     }
 
@@ -25,7 +28,6 @@ let mutations={
 }
 let state={
     goodInfo:{},
-    NANOID:getNanoid()
 }
 let getters={
     categoryView(state){

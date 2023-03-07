@@ -2,14 +2,16 @@
 import axios from 'axios'
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import store from '@/store';
 const requests=axios.create({
     baseURL:'/api',
     timeout:5000,
 });
 requests.interceptors.request.use((config)=>{
-    if(store.state.detail.NANOID){
-        config.headers.userTempId=store.state.detail.NANOID
+    if(localStorage.getItem('NANOID')){
+        config.headers.userTempId=localStorage.getItem('NANOID')
+    }
+    if(localStorage.getItem('TOKEN')){
+        config.headers.token=localStorage.getItem('TOKEN')
     }
     nProgress.start()
     return config;

@@ -43,7 +43,7 @@
       <div class="money-box">
         <div >已选择{{checkedNum}}件商品</div>
         <div >总价(不含运费):{{totalPrice}}元</div>
-        <div class="sumbtn"><a href="#" target="_blank">结算</a></div>
+        <router-link class="sumbtn" to="/trade">结算</router-link>
       </div>
     </div>
   </div>
@@ -241,15 +241,13 @@
           margin-left: 20px;
         }
         .sumbtn{
-          display: flex;
           width: 50px;
           height: 50px;
           border: #EA4A36 2px solid;
           background-color:#EA4A36 ;
           color: white;
+          line-height: 50px;
           border-radius: 5%;
-          justify-content: center;
-          align-items: center;
         }
       }
     }

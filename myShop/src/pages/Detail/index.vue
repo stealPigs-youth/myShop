@@ -374,6 +374,8 @@
           this.$router.push('/addcartsuccess')
           localStorage.setItem('skuInfo',JSON.stringify(this.skuInfo))
           localStorage.setItem('itemNum',this.itemNum)
+        }else if(result==='未登录'){
+          this.$router.push('/login')
         }else{
           alert('添加失败')
         }

@@ -19,7 +19,7 @@ VueRouter.prototype.replace=function(location,resolve,reject){
         originReplace.call(this,location,()=>{},()=>{})
     }
 }
-export default new VueRouter({
+const router=new VueRouter({
     routes:[
         {
             path:"/home",
@@ -51,7 +51,18 @@ export default new VueRouter({
         },
         {
             path:'/shopcart',
-            component:()=>import('@/pages/ShopCart')
+            component:()=>import('@/pages/ShopCart'),
+            beforeEnter:(to,from,next)=>{
+                if(localStorage.getItem('TOKEN')){
+                    next()
+                }else{
+                    next('/login')
+                }
+            }
+        },
+        {
+            path:'/trade',
+            component:()=>import('@/pages/Trade')
         },
         {
             path:'*',
@@ -63,3 +74,5 @@ export default new VueRouter({
     },
     mode:"history",
 })
+
+export default router

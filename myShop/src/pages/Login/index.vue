@@ -75,12 +75,19 @@
       }
     },
     methods:{
-      userLogin(){
+      async userLogin(){
         const {phone,password}=this
         if(phone&&password){
-          this.$store.dispatch('userLogin',{phone,password})
+          let result=await this.$store.dispatch('userLogin',{phone,password})
+          if(result==='success'){
+            this.$router.push('/home')
+            this.$store.dispatch('getUserInfo')
+          }
         }
       }
+    },
+    mounted(){
+      this.$store.dispatch('userLogout')
     }
   }
 </script>

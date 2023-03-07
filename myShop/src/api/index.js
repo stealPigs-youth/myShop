@@ -69,3 +69,27 @@ export const reqUserLogin=(userData)=>{
         method:'post'
     })
 }
+export const reqUserInfo=()=>{
+    return requests({
+        url:'/user/passport/auth/getUserInfo',
+        method:'get'
+    })
+}
+export const reqLogout=()=>{
+    return requests({
+        url:'user/passport/logout',
+        method:'get'
+    })
+}
+export const reqAddressInfo=()=>{
+    return requests({
+        url:'/user/userAddress/auth/findUserAddressList',
+        method:'get'
+    })
+}
+export const reqOrderInfo=()=>{
+    return requests({
+        url:'/order/auth/trade',
+        method:'get'
+    })
+}
