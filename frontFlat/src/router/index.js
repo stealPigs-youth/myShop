@@ -24,25 +24,28 @@ const router=new VueRouter({
         {
             path:"/home",
             component:()=>import('@/pages/Home'),
-            meta:{showFooter:true}
+            meta:{showFooter:true,pass:true}
         },
         {
             path:"/login",
             component:()=>import('@/pages/Login'),
+            meta:{pass:true}
         },
         {
             path:"/register",
             component:()=>import('@/pages/Register'),
+            meta:{pass:true}
         },
         {
             path:"/search/:keywords",
             name:'search',
             component:()=>import('@/pages/Search'),
-            meta:{showFooter:true}
+            meta:{showFooter:true,pass:true}
         },
         {
             path:'/detail/:goodId',
-            component:()=>import('@/pages/Detail')
+            component:()=>import('@/pages/Detail'),
+            meta:{pass:true}
         },
         {
             path:'/addcartsuccess',
@@ -52,17 +55,19 @@ const router=new VueRouter({
         {
             path:'/shopcart',
             component:()=>import('@/pages/ShopCart'),
-            beforeEnter:(to,from,next)=>{
-                if(localStorage.getItem('TOKEN')){
-                    next()
-                }else{
-                    next('/login')
-                }
-            }
+            
         },
         {
             path:'/trade',
-            component:()=>import('@/pages/Trade')
+            component:()=>import('@/pages/Trade'),
+            beforeEnter(to,from,next){
+                if(from.path==='/shopcart'){
+                    next()
+                }
+                else{
+                    next('/')
+                }
+            }
         },
         {
             path:'/pay',
@@ -85,6 +90,23 @@ const router=new VueRouter({
         return {y:0}
     },
     mode:"history",
+})
+
+router.beforeEach(function(to,from,next){
+    console.log('to',to)
+    console.log('from',from)
+    if(localStorage.getItem('TOKEN')){
+        next()
+    }
+    else{
+        if(to.meta.pass){
+            next()
+        }
+        else{
+            next('/login')
+        }
+       
+    }
 })
 
 export default router

@@ -6,8 +6,7 @@ import Pager from './components/Pager'
 import store from './store'
 import '@/mock/mockServe'
 import 'swiper/css/swiper.css'
-import './utils/fontIcon.js'
-import './utils/elementUI'
+import '@/utils'
 import * as API from '@/api'
 
 
